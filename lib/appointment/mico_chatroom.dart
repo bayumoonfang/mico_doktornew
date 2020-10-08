@@ -41,7 +41,7 @@ class _ChatroomState extends State<Chatroom> {
   String _isLoading = '0';
 
   Future<bool> _onWillPop() async {
-    widget.idAppointment == '1' ?
+    widget.idPage == '1' ?
     Navigator.of(context).pushReplacement(
         new MaterialPageRoute(
             builder: (BuildContext context) => Home()))
@@ -276,7 +276,7 @@ class _ChatroomState extends State<Chatroom> {
                 icon: new Icon(Icons.arrow_back),
                 color: Colors.white,
                 onPressed: () {
-                  widget.idAppointment == '1' ?
+                  widget.idPage == '1' ?
                   Navigator.of(context).pushReplacement(
                       new MaterialPageRoute(
                           builder: (BuildContext context) => Home()))
