@@ -6,24 +6,24 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:getwidget/getwidget.dart';
-import 'package:mico_doktornew/appointment/get_appointment.dart';
-import 'package:mico_doktornew/mico_historytransaksi.dart';
+import 'package:mico_doktornew/appointment/mico_appointment.dart';
+import 'package:mico_doktornew/mico_gettransaksi.dart';
 import 'package:mico_doktornew/mico_home.dart';
 
 
-class AppointmentList extends StatefulWidget {
+class HistoryTransaksi extends StatefulWidget {
   final String getPhone;
-  const AppointmentList(this.getPhone);
+  const HistoryTransaksi(this.getPhone);
   @override
-  _AppointmentListState createState() => new _AppointmentListState(getPhoneState: this.getPhone);
+  _HistoryTransaksiState createState() => new _HistoryTransaksiState(getPhoneState: this.getPhone);
 
 }
 
 
-class _AppointmentListState extends State<AppointmentList> with SingleTickerProviderStateMixin {
+class _HistoryTransaksiState extends State<HistoryTransaksi> with SingleTickerProviderStateMixin {
   TabController controller;
   String getAcc, getPhoneState;
-  _AppointmentListState({this.getPhoneState});
+  _HistoryTransaksiState({this.getPhoneState});
 
 
 
@@ -82,7 +82,7 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
           appBar: AppBar(
             backgroundColor: Hexcolor("#075e55"),
             leading: Icon(Icons.clear,color: Hexcolor("#075e55"),),
-            title: new Text("Appointment",style: TextStyle(color : Colors.white,fontFamily: 'VarelaRound',fontSize: 18),),
+            title: new Text("History Transaksi",style: TextStyle(color : Colors.white,fontFamily: 'VarelaRound',fontSize: 18),),
             elevation: 0.0,
             centerTitle: true,
           ),
@@ -90,7 +90,7 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
           TabBarView(
             controller: controller,
             children: <Widget>[
-              GetAppointment(getPhoneState),
+              GetTransaksi(getPhoneState),
             ],
           ),
           bottomNavigationBar: _bottomNavigationBar(),
@@ -104,6 +104,7 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       items: [
+
         BottomNavigationBarItem(
             icon: FaIcon(
               FontAwesomeIcons.home,
@@ -141,6 +142,9 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
               )),
         ),
 
+
+
+
         BottomNavigationBarItem(
           icon: FaIcon(
             FontAwesomeIcons.fileAlt,
@@ -151,6 +155,9 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
                 fontFamily: 'VarelaRound',
               )),
         ),
+
+
+
         BottomNavigationBarItem(
           icon: FaIcon(
             FontAwesomeIcons.userCircle,
@@ -164,7 +171,7 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
 
       ],
       onTap: _onTap,
-      currentIndex: 1,
+      currentIndex: 2,
       selectedItemColor: Hexcolor("#628b2c"),
     );
   }
@@ -187,6 +194,7 @@ class _AppointmentListState extends State<AppointmentList> with SingleTickerProv
             new MaterialPageRoute(
                 builder: (BuildContext context) => HistoryTransaksi(getPhoneState)));
         break;
+
 
     }
     setState(() {

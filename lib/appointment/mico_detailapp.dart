@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:mico_doktornew/appointment/mico_chatroom.dart';
+import 'package:mico_doktornew/appointment/mico_videoroom.dart';
+import 'package:mico_doktornew/mico_home.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:responsive_container/responsive_container.dart';
 import 'package:steps/steps.dart';
@@ -68,6 +70,8 @@ class _DetailAppointmentState extends State<DetailAppointment> {
     Map data = jsonDecode(response.body);
     setState(() {
       String getMessage = data["message"].toString();
+      String getRoom = data["room"].toString();
+      String getJenis = data["type"].toString();
       if (getMessage == '1') {
         showToast("Maaf Room Konsultasi penuh , silahkan coba beberapa saat lagi..", gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
         return;
@@ -78,12 +82,35 @@ class _DetailAppointmentState extends State<DetailAppointment> {
           return;
         });
       }else if (getMessage == '3') {
-        Navigator.of(context).pushReplacement(
-            new MaterialPageRoute(
-                builder: (BuildContext context) => Chatroom(widget.idAppointment, "1")));
+        if (getJenis == 'RC') {
+          Navigator.of(context).pushReplacement(
+              new MaterialPageRoute(
+                  builder: (BuildContext context) => Chatroom(widget.idAppointment, "1")));
+        } else {
+          Navigator.of(context).pushReplacement(
+              new MaterialPageRoute(
+                  builder: (BuildContext context) => VideoChatHome(widget.idAppointment, getRoom.toString())));
+        }
       }
     });
   }
+
+
+  _doTolakAppointment() async {
+    final response = await http.post(
+        "https://duakata-dev.com/miracle/api_script.php?do=act_declineappointmentdokter",
+        body: {"appkode": widget.idAppointment});
+    Map data = jsonDecode(response.body);
+    setState(() {
+      String getMessage3 = data["message"].toString();
+      if (getMessage3 == '1') {
+        Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(
+                builder: (BuildContext context) => Home()));
+      }
+    });
+  }
+
 
   askTerima() {
     showDialog(
@@ -92,7 +119,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
           return AlertDialog(
             //title: Text(),
             content: Text(
-                "Apakah anda yakin untuk menghapus pesan ini  ?",
+                "Berikan respon untuk permintaan appointment baru anda..",
                 style: TextStyle(fontFamily: 'VarelaRound', fontSize: 14)),
             actions: [
               new FlatButton(
@@ -101,17 +128,27 @@ class _DetailAppointmentState extends State<DetailAppointment> {
                     Navigator.pop(context);
                   },
                   child:
-                  Text("Iya, Terima", style: TextStyle(fontFamily: 'VarelaRound',
+                  Text("Accept", style: TextStyle(fontFamily: 'VarelaRound',
                       fontWeight: FontWeight.bold,
-                      fontSize: 18))),
+                      fontSize: 16))),
+              new FlatButton(
+                  onPressed: () {
+                    _doTolakAppointment();
+                  },
+                  child:
+                  Text("Decline", style: TextStyle(fontFamily: 'VarelaRound',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: 16))),
               new FlatButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child:
-                  Text("Tidak", style: TextStyle(fontFamily: 'VarelaRound',
+                  Text("Close", style: TextStyle(fontFamily: 'VarelaRound',
                       fontWeight: FontWeight.bold,
-                      fontSize: 18)))
+                      color: Colors.black,
+                      fontSize: 16)))
             ],
           );
         });
@@ -169,7 +206,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
                                       Align(
                                         alignment: Alignment.centerLeft,
                                           child : Text(
-                                        "Detail Appointment",
+                                        "Detail  Appointment",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontFamily: 'VarelaRound',
@@ -379,7 +416,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
           appBar: new AppBar(
             backgroundColor: Hexcolor("#075e55"),
             title: Text(
-              "Detail Appointment",
+              "Detail Request Appointment",
               style: TextStyle(
                   color: Colors.white, fontFamily: 'VarelaRound', fontSize: 16),
             ),
@@ -417,7 +454,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
                               //side: BorderSide(color: Colors.red)
                             ),
                             child: Text(
-                              "Terima",
+                              "Berikan Respon",
                               style: TextStyle(
                                   fontFamily: 'VarelaRound',
                                   fontSize: 14,
@@ -426,6 +463,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
                             ),
                             onPressed: (){
         askTerima();
+        
                             },
                           )
 

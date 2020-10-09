@@ -1,30 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/loader/gf_loader.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:mico_doktornew/appointment/mico_detailapp.dart';
-import 'package:mico_doktornew/appointment/mico_chatroom.dart';
-import 'package:mico_doktornew/appointment/mico_videoroom.dart';
+
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:mico_doktornew/mico_home.dart';
+import 'file:///D:/PROJECT%20KANTOR/mico/lib/backup/mico_historytransaksi_BACKUP.dart';
 
 
-class GetAppointment extends StatefulWidget {
+class GetTransaksi extends StatefulWidget {
   final String getPhone;
-  const GetAppointment(this.getPhone);
+  const GetTransaksi(this.getPhone);
   @override
-  _GetAppointmentState createState() => new _GetAppointmentState(getPhoneState: this.getPhone);
+  _GetTransaksiState createState() => new _GetTransaksiState(getPhoneState: this.getPhone);
 }
 
 
-class _GetAppointmentState extends State<GetAppointment> {
+class _GetTransaksiState extends State<GetTransaksi> {
   List data;
   String getAcc, getPhoneState;
-  _GetAppointmentState({this.getPhoneState});
+  _GetTransaksiState({this.getPhoneState});
 
 
   @override
@@ -36,7 +36,7 @@ class _GetAppointmentState extends State<GetAppointment> {
 
   Future<List> getData() async {
     final response = await http.get(
-        "https://duakata-dev.com/miracle/api_script.php?do=getdata_appointmentdoctor&id=" +
+        "https://duakata-dev.com/miracle/api_script.php?do=getdata_appointmentdokter&id=" +
             getPhoneState);
     setState((){
       data = json.decode(response.body);
@@ -78,7 +78,7 @@ class _GetAppointmentState extends State<GetAppointment> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               new Text(
-                                "Tidak ada appointment",
+                                "Tidak ada Transaksi",
                                 style: new TextStyle(
                                     fontFamily: 'VarelaRound', fontSize: 18),
                               ),
@@ -120,7 +120,7 @@ class _GetAppointmentState extends State<GetAppointment> {
                                                       ),
                                                     ),
                                                     padding: const EdgeInsets.all(5),
-                                                    child:  Text(data[i]["c"] == 'ON REVIEW' ? 'Need Approval' : data[i]["c"] == 'PAID' ? 'On Going' : data[i]["c"],
+                                                    child:  Text(data[i]["c"],
                                                         style: TextStyle(
                                                             fontFamily: 'VarelaRound',
                                                             fontWeight: FontWeight.bold,
@@ -134,6 +134,13 @@ class _GetAppointmentState extends State<GetAppointment> {
                                           Padding(
                                             padding: const EdgeInsets.only(top: 10,bottom: 10),
                                             child: ListTile(
+                                                leading:         CircleAvatar(
+                                                  backgroundImage: CachedNetworkImageProvider("https://duakata-dev.com/miracle/media/photo/" +
+                                                      data[i]["e"],
+                                                  ),
+                                                  backgroundColor: Colors.white,
+                                                  radius: 20,
+                                                ),
                                                 title:  Align(
                                                   alignment: Alignment.centerLeft,
                                                   child: Text(
@@ -183,19 +190,8 @@ class _GetAppointmentState extends State<GetAppointment> {
                                     )
                                 ),
                                 onTap: () {
-                                  data[i]["c"] == 'ON REVIEW'  ?
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => DetailAppointment(data[i]["b"].toString())))
-                                  : data[i]["c"] == 'PAID' && data[i]["m"] == 'CHAT' ?
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                  builder: (BuildContext context) => Chatroom(data[i]["b"].toString(), "2")))
-                                  :
-                                  data[i]["c"] == 'PAID' && data[i]["m"] == 'VIDEO' ?
-                                      Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => VideoChatHome(data[i]["b"].toString(), data[i]["n"].toString())))
-                                      :
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => Home()));
+
+
                                 },
                               );
                           }

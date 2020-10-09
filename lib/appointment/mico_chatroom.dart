@@ -247,7 +247,50 @@ class _ChatroomState extends State<Chatroom> {
 
 
 
+_selesaiSesi() async {
+  var url = "https://duakata-dev.com/miracle/api_script.php?do=act_selesaichatdokter";
+  http.post(url,
+      body: {
+        "id": widget.idAppointment,
+      });
 
+}
+
+
+  _askselesaiSesi() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //title: Text(),
+            content: Text(
+                "Apakah anda yakin untuk mengakhiri sesi chat ini  ?",
+                style: TextStyle(fontFamily: 'VarelaRound', fontSize: 14)),
+            actions: [
+              new FlatButton(
+                  onPressed: () {
+                    _selesaiSesi();
+                    Navigator.of(context).pushReplacement(
+                        new MaterialPageRoute(
+                            builder: (BuildContext context) => Home()));
+                    myFocusNode.dispose();
+                  },
+                  child:
+                  Text("Iya, yakin", style: TextStyle(fontFamily: 'VarelaRound',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18))),
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child:
+                  Text("Tidak", style: TextStyle(fontFamily: 'VarelaRound',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18)))
+            ],
+          );
+        });
+  }
 
 
   @override
@@ -291,6 +334,62 @@ class _ChatroomState extends State<Chatroom> {
               color: Hexcolor("#efe6dd"),
               child: Column(
                   children: [
+                    Padding(
+                      padding : const EdgeInsets.only(bottom: 5),
+                      child: Center(
+                          child: Container(
+                              width: double.infinity,
+                              color : Hexcolor("#ffffff"),
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 10  ,right: 10),
+                                  child:
+                                  GestureDetector(
+                                    child :
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                            padding :  const EdgeInsets.only(left: 5),
+                                            child :
+                                            Text(widget.idAppointment == null ? '...' : widget.idAppointment,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Hexcolor("#516067"),
+                                                  fontFamily: 'VarelaRound'),textAlign: TextAlign.left,)),
+                                        Padding(
+                                            padding :  const EdgeInsets.only(right: 10),
+                                            child :
+                                            ButtonTheme(
+                                              minWidth: 60.0,
+                                              height: 30.0,
+                                              buttonColor: Hexcolor("#075e55"),
+                                              child: RaisedButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                ),
+                                                onPressed: () {
+                                                  _askselesaiSesi();
+                                                },
+                                                child: Text("Selesaikan",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                      fontFamily: 'VarelaRound')),
+                                              ),
+                                            )),
+                                      ],
+                                    ),
+                                    onTap: (){
+                                     // Navigator.push(context, EnterPage(page: DetailTagihan(widget.idAppointment)));
+                                    },)
+
+                              )
+                          )
+                      ),
+                    ),
+
+
                     Padding(
                       padding : const EdgeInsets.only(top:10,bottom: 15),
                       child: Center(

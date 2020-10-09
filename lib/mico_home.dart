@@ -13,6 +13,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:mico_doktornew/appointment/mico_appointment.dart';
 import 'package:mico_doktornew/helper/checkconnection.dart';
 import 'package:mico_doktornew/helper/session_login.dart';
+import 'package:mico_doktornew/mico_historytransaksi.dart';
 import 'package:mico_doktornew/mico_loginstart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -55,7 +56,18 @@ class _HomeState extends State<Home> {
   }
 
 
+  String countmessage = '0';
   String countapp = "0";
+
+  _getCountMessage() async {
+    final response = await http.get(
+        "https://duakata-dev.com/miracle/api_script.php?do=getdata_countmessage&id="+getPhone);
+    Map data = jsonDecode(response.body);
+    setState(() {
+      countmessage = data["a"].toString();
+    });
+  }
+
   _getCountApp() async {
     final response = await http.get(
         "https://duakata-dev.com/miracle/api_script.php?do=getdata_countappdoctor&id="+getPhone);
@@ -66,11 +78,11 @@ class _HomeState extends State<Home> {
   }
 
 
-
   void _loaddata() async {
     await  _connect();
     await _session();
     await _getCountApp();
+    await _getCountMessage();
   }
 
 
@@ -166,6 +178,16 @@ class _HomeState extends State<Home> {
               )),
         ),
 
+        BottomNavigationBarItem(
+          icon: FaIcon(
+            FontAwesomeIcons.fileAlt,
+            size: 22,
+          ),
+          title: Text("History",
+              style: TextStyle(
+                fontFamily: 'VarelaRound',
+              )),
+        ),
 
         BottomNavigationBarItem(
           icon: FaIcon(
@@ -188,19 +210,21 @@ class _HomeState extends State<Home> {
   _onTap(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        Navigator.of(context).pushReplacement(
-            new MaterialPageRoute(
-                builder: (BuildContext context) => Home()));
-
-        break;
+          Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(
+          builder: (BuildContext context) => Home()));
+          break;
       case 1:
+          Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(
+          builder: (BuildContext context) => AppointmentList(getPhone.toString())));
+          break;
+      case 2:
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(
-                builder: (BuildContext context) => AppointmentList(getPhone.toString())));
-
+                builder: (BuildContext context) => HistoryTransaksi(getPhone.toString())));
         break;
-
-    }
+  }
     setState(() {
       _currentTabIndex = tabIndex;
     });
