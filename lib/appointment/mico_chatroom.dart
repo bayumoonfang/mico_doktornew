@@ -5,13 +5,11 @@
 import 'dart:io';
 
 import 'package:badges/badges.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -310,7 +308,7 @@ _selesaiSesi() async {
         child :
         Scaffold(
           appBar: new AppBar(
-            backgroundColor: Hexcolor("#075e55"),
+            backgroundColor: HexColor("#075e55"),
             title: new Text(getNamaDokter,
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'VarelaRound', fontSize: 16)),
@@ -331,7 +329,7 @@ _selesaiSesi() async {
           ),
 
           body: new Container(
-              color: Hexcolor("#efe6dd"),
+              color: HexColor("#efe6dd"),
               child: Column(
                   children: [
                     Padding(
@@ -339,7 +337,7 @@ _selesaiSesi() async {
                       child: Center(
                           child: Container(
                               width: double.infinity,
-                              color : Hexcolor("#ffffff"),
+                              color : HexColor("#ffffff"),
                               child: Padding(
                                   padding: const EdgeInsets.only(left: 10  ,right: 10),
                                   child:
@@ -355,7 +353,7 @@ _selesaiSesi() async {
                                             Text(widget.idAppointment == null ? '...' : widget.idAppointment,
                                               style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Hexcolor("#516067"),
+                                                  color: HexColor("#516067"),
                                                   fontFamily: 'VarelaRound'),textAlign: TextAlign.left,)),
                                         Padding(
                                             padding :  const EdgeInsets.only(right: 10),
@@ -363,7 +361,7 @@ _selesaiSesi() async {
                                             ButtonTheme(
                                               minWidth: 60.0,
                                               height: 30.0,
-                                              buttonColor: Hexcolor("#075e55"),
+                                              buttonColor: HexColor("#075e55"),
                                               child: RaisedButton(
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
@@ -397,7 +395,7 @@ _selesaiSesi() async {
 
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color : Hexcolor("#d4eaf5"),
+                                color : HexColor("#d4eaf5"),
                                 boxShadow: [
                                   //BoxShadow(color: Colors.white, spreadRadius: 1),
                                 ],
@@ -409,7 +407,7 @@ _selesaiSesi() async {
                                     DateTime.now(), [dd, ' ', MM, ' ', yyyy]),
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Hexcolor("#516067"),
+                                      color: HexColor("#516067"),
                                       fontFamily: 'VarelaRound',)),
                               )
                           )
@@ -417,7 +415,7 @@ _selesaiSesi() async {
                     ),
                     Flexible(
                         child: Container(
-                            color: Hexcolor("#efe6dd"),
+                            color: HexColor("#efe6dd"),
                             height: double.infinity,
                             margin: const EdgeInsets.only(bottom: 1.0),
                             child: new FutureBuilder(
@@ -448,7 +446,7 @@ _selesaiSesi() async {
                                                         Container(
                                                             decoration: BoxDecoration(
                                                               borderRadius: BorderRadius.circular(10),
-                                                              color : Hexcolor("#ffffff"),
+                                                              color : HexColor("#ffffff"),
                                                               boxShadow: [
 
                                                               ],
@@ -534,7 +532,7 @@ _selesaiSesi() async {
                                                               Container(
                                                                   decoration: BoxDecoration(
                                                                     borderRadius: BorderRadius.circular(10),
-                                                                    color : Hexcolor("#e2ffc7"),
+                                                                    color : HexColor("#e2ffc7"),
                                                                     boxShadow: [
                                                                       // BoxShadow(color: Colors.white, spreadRadius: 1),
                                                                     ],
@@ -649,9 +647,9 @@ _selesaiSesi() async {
                                           toAnimate: false,
                                           child: FloatingActionButton(
                                             elevation: 1,
-                                            backgroundColor: Hexcolor("#f8f7f5"),
+                                            backgroundColor: HexColor("#f8f7f5"),
                                             child:  Center(
-                                              child: FaIcon(FontAwesomeIcons.angleDoubleDown, size: 18,color: Hexcolor("#727270"),),
+                                              child: FaIcon(FontAwesomeIcons.angleDoubleDown, size: 18,color: HexColor("#727270"),),
                                             ),onPressed: (){
                                             _removeread();
                                             _scrollController
@@ -662,9 +660,9 @@ _selesaiSesi() async {
                                             :
                                         FloatingActionButton(
                                           elevation: 1,
-                                          backgroundColor: Hexcolor("#f8f7f5"),
+                                          backgroundColor: HexColor("#f8f7f5"),
                                           child:  Center(
-                                            child: FaIcon(FontAwesomeIcons.angleDoubleDown, size: 18,color: Hexcolor("#727270"),),
+                                            child: FaIcon(FontAwesomeIcons.angleDoubleDown, size: 18,color: HexColor("#727270"),),
                                           ),onPressed: (){
                                           _scrollController
                                               .jumpTo(_scrollController.position.maxScrollExtent);

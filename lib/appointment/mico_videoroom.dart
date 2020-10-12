@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:mico_doktornew/helper/checkconnection.dart';
 import 'package:mico_doktornew/helper/session_login.dart';
 import 'package:mico_doktornew/helper/setting.dart';
@@ -11,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:responsive_container/responsive_container.dart';
 import 'package:toast/toast.dart';
 
 
@@ -86,6 +88,9 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     super.dispose();
   }
 
+  int waktunya;
+  int dd = DateTime.now().millisecondsSinceEpoch + 1000 * 60 * 60;
+
   @override
   void initState() {
     super.initState();
@@ -95,7 +100,25 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     _getVideoDetail();
     // initialize agora sdk
     initialize();
-    startTimer();
+    //startTimer();
+    //the birthday's date
+    final birthday = DateTime(2020, 10, 26);
+    final date2 = DateTime.now();
+    final difference = date2.difference(birthday).inMilliseconds;
+
+   /* final startTime = DateTime(2020, 10, 26, 10, 30);
+    final currentTime = DateTime.now();
+
+    final diff_dy = currentTime.difference(startTime).inDays;
+    final diff_hr = currentTime.difference(startTime).inHours;
+    final diff_mn = currentTime.difference(startTime).inMinutes;
+    final diff_sc = currentTime.difference(startTime).inSeconds;
+
+    waktunya = diff_sc;*/
+
+    // showToast(dd.toString(), gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+
+    //showToast(difference.toString(), gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
   }
 
   Future<void> initialize() async {
@@ -249,7 +272,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
   /// Toolbar layout
   Widget _toolbar() {
     final viewnya = _getRenderViews();
-    if (viewnya.length == 1) {
+   /* if (viewnya.length == 1) {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.symmetric(vertical: 48),
@@ -274,7 +297,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           ],
         ),
       );
-    } else {
+    } else {*/
       // if (widget.role == ClientRole.Audience || viewnya.length == 0)
       //return Container();
       return Container(
@@ -296,7 +319,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
               padding: const EdgeInsets.all(12.0),
             ),
             RawMaterialButton(
-              onPressed: () => _onCallEnd(context),
+              onPressed: () => showAlert2(),
               child: Icon(
                 Icons.call_end,
                 color: Colors.white,
@@ -322,57 +345,27 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           ],
         ),
       );
-    }
+  /*  }*/
   }
+
+  int endTime2 = DateTime.now().millisecondsSinceEpoch + 1000 * 60 * 60;
 
   /// Info panel to show logs
   Widget _panel() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      alignment: Alignment.bottomCenter,
-      child: FractionallySizedBox(
-        heightFactor: 0.5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 48),
-          child: ListView.builder(
-            reverse: true,
-            itemCount: _infoStrings.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (_infoStrings.isEmpty) {
-                return null;
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 3,
-                  horizontal: 10,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.yellowAccent,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          _infoStrings[index],
-                          style: TextStyle(color: Colors.blueGrey),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
+    return
+      Align(
+        alignment: Alignment.topRight,
+    child :      Padding(
+      padding: const EdgeInsets.only(top: 20,right: 20),
+      child:  Container(
+          padding: const EdgeInsets.only(top: 30,right: 10),
+          alignment: Alignment.topRight,
+          child:
+          WeekCountdown()
       ),
-    );
+    )
+
+      );
   }
 
   void _onCallEnd(BuildContext context) {
@@ -433,6 +426,31 @@ class _VideoChatHomeState extends State<VideoChatHome> {
         });
   }
 
+
+
+  void showAlert2() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //title: Text(),
+            content: Text(
+                "Apakah anda yakin untuk mengakhiri konsultasi ini ?",
+                style: TextStyle(fontFamily: 'VarelaRound')),
+            actions: [
+              new FlatButton(
+                  onPressed: () {
+
+                  },
+                  child:
+                  Text("Iya", style: TextStyle(fontFamily: 'VarelaRound')))
+            ],
+          );
+        });
+  }
+
+
+
   Future<bool> _onWillPop() async {
     //Toast.show("Toast plugin app", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
     showAlert();
@@ -457,11 +475,68 @@ class _VideoChatHomeState extends State<VideoChatHome> {
                                 fontSize: 23,
                                 color: Colors.blueAccent)))),*/
                 _viewRows(),
-                //_panel(),
+                _panel(),
                 _toolbar(),
               ],
             ),
           ),
         ));
   }
+}
+
+
+
+class WeekCountdown extends StatefulWidget {
+  String ID;
+  @override
+  //State<StatefulWidget> createState() => _WeekCountdownState(this.ID);
+  _WeekCountdownState createState() => new _WeekCountdownState();
+
+}
+
+class _WeekCountdownState extends State<WeekCountdown> {
+  Timer _timer;
+  DateTime _currentTime;
+  String getPhone;
+  int getVal;
+  final _tokenVal = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTime = DateTime.now();
+    _timer = Timer.periodic(Duration(seconds: 1), _onTimeChange);
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _onTimeChange(Timer timer) {
+    setState(() {
+      _currentTime = DateTime.now();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final startOfNextWeek = calculateStartOfNextWeek(_currentTime);
+    final remaining = startOfNextWeek.difference(_currentTime);
+
+    final days = remaining.inDays;
+    final hours = remaining.inHours - remaining.inDays * 24;
+    final minutes = remaining.inMinutes - remaining.inHours * 60;
+    final seconds = remaining.inSeconds - remaining.inMinutes * 60;
+
+    final formattedRemaining = '$hours : $minutes : $seconds';
+
+    return Text(formattedRemaining, style: TextStyle(color: Colors.white,fontSize: 24),);
+  }
+}
+
+DateTime calculateStartOfNextWeek(DateTime time) {
+  final daysUntilNextWeek = 8 - time.weekday;
+  return DateTime(2020, 10, 12 , 18 , 00);
 }

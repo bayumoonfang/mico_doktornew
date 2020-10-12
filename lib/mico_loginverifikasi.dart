@@ -153,7 +153,7 @@ class _VerifikasiLoginState extends State<VerifikasiLogin> {
                                       padding: const EdgeInsets.only(bottom: 15.0),
                                       child :
                                       RaisedButton(
-                                          color: Hexcolor("#8cc63e"),
+                                          color: HexColor("#8cc63e"),
                                           child: Text(
                                             "Verifikasi",
                                             style: TextStyle(

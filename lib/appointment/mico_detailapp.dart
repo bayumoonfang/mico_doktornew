@@ -13,10 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:mico_doktornew/appointment/mico_chatroom.dart';
 import 'package:mico_doktornew/appointment/mico_videoroom.dart';
 import 'package:mico_doktornew/mico_home.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:responsive_container/responsive_container.dart';
-import 'package:steps/steps.dart';
-import 'package:steps_indicator/steps_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:toast/toast.dart';
 
@@ -414,7 +411,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
         onWillPop: _onWillPop,
         child: Scaffold(
           appBar: new AppBar(
-            backgroundColor: Hexcolor("#075e55"),
+            backgroundColor: HexColor("#075e55"),
             title: Text(
               "Detail Request Appointment",
               style: TextStyle(
@@ -448,7 +445,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
 
                           getStatus == 'ON REVIEW' ?
                           RaisedButton(
-                            color: Hexcolor("#075e55"),
+                            color: HexColor("#075e55"),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                               //side: BorderSide(color: Colors.red)

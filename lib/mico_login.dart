@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:mico_doktornew/mico_loginverifikasi.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
 import 'package:toast/toast.dart';
 
 class Login extends StatefulWidget {
@@ -136,7 +132,7 @@ class _LoginState extends State<Login> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                color: Hexcolor("#8cc63e"),
+                                color: HexColor("#8cc63e"),
                                 child: Text(
                                   "Selanjutnya",
                                   style: TextStyle(

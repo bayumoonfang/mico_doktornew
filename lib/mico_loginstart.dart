@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 import 'package:mico_doktornew/mico_login.dart';
 
 
@@ -50,14 +49,14 @@ class _LoginStartState extends State<LoginStart> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        color: Hexcolor("#8cc63e"),
+                        color: HexColor("#8cc63e"),
                         child: Text(
                           "Login As Doctor",
                           style: TextStyle(
                             fontFamily: 'VarelaRound',
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Hexcolor("#8cc63e"),
+                            color: HexColor("#8cc63e"),
                           ),
                         ),
                         onPressed: () =>  Navigator.of(context).push(

@@ -57,7 +57,7 @@ class _GetAppointmentState extends State<GetAppointment> {
           onRefresh: _getData,
           child :
           Container(
-              color: Hexcolor("#f5f5f5"),
+              color: HexColor("#f5f5f5"),
               margin: EdgeInsets.all(10.0),
               child: new FutureBuilder<List>(
                   future: getData(),
@@ -114,7 +114,7 @@ class _GetAppointmentState extends State<GetAppointment> {
                                                       borderRadius: BorderRadius.circular(5),
                                                       border: Border.all(
                                                         color:
-                                                        data[i]["c"] == 'DONE' ? Hexcolor("#075e55") : Colors.red,
+                                                        data[i]["c"] == 'DONE' ? HexColor("#075e55") : Colors.red,
                                                         //                   <--- border color
                                                         width: 1.0,
                                                       ),

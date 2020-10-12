@@ -80,8 +80,8 @@ class _HistoryTransaksiState extends State<HistoryTransaksi> with SingleTickerPr
         child:  Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Hexcolor("#075e55"),
-            leading: Icon(Icons.clear,color: Hexcolor("#075e55"),),
+            backgroundColor: HexColor("#075e55"),
+            leading: Icon(Icons.clear,color: HexColor("#075e55"),),
             title: new Text("History Transaksi",style: TextStyle(color : Colors.white,fontFamily: 'VarelaRound',fontSize: 18),),
             elevation: 0.0,
             centerTitle: true,
@@ -172,7 +172,7 @@ class _HistoryTransaksiState extends State<HistoryTransaksi> with SingleTickerPr
       ],
       onTap: _onTap,
       currentIndex: 2,
-      selectedItemColor: Hexcolor("#628b2c"),
+      selectedItemColor: HexColor("#628b2c"),
     );
   }
 

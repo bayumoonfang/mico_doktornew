@@ -18,7 +18,6 @@ import 'package:mico_doktornew/mico_loginstart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 class Home extends StatefulWidget{
 
   _HomeState createState() => new _HomeState();
@@ -111,7 +110,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
         return Scaffold(
           appBar:  new AppBar(
-            backgroundColor: Hexcolor("#075e55"),
+            backgroundColor: HexColor("#075e55"),
             leading: Builder(
               builder: (context) => IconButton(
                 icon: new Icon(Icons.menu),
@@ -203,7 +202,7 @@ class _HomeState extends State<Home> {
       ],
       onTap: _onTap,
       currentIndex: _currentTabIndex,
-      selectedItemColor: Hexcolor("#628b2c"),
+      selectedItemColor: HexColor("#628b2c"),
     );
   }
 
