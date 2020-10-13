@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:responsive_container/responsive_container.dart';
 import 'package:toast/toast.dart';
+import 'package:time/time.dart';
 
 
 class VideoChatHome extends StatefulWidget {
@@ -30,6 +31,14 @@ class VideoChatHome extends StatefulWidget {
 class _VideoChatHomeState extends State<VideoChatHome> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
+  Timer _timer;
+  DateTime _currentTime;
+  DateTime _afterTime, _timeIntv;
+  int _remainingdetik,
+      _remainingmenit,
+      _detik,
+      _menit;
+
   bool muted = false;
   String getRoomVideo,
       getPhoneNumber= '...';
@@ -42,15 +51,37 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 
+  String tahun, bulan, hari, jam, menit = "0";
   void _getVideoDetail() async {
     final response = await http.get(
         "https://duakata-dev.com/miracle/api_script.php?do=getdata_videodetailuser&id="+widget.getApp);
     Map data = jsonDecode(response.body);
     setState(() {
-      getRoomVideo = data["roomvideo"].toString();
+      tahun = data["a"].toString();
+      bulan = data["b"].toString();
+      hari = data["c"].toString();
+      jam = data["d"].toString();
+      menit = data["e"].toString();
+      _currentTime = DateTime.now();
+      //_timeIntv = DateTime(2020, 10, 13, 12, 20, 00);
+      //_remainingdetik = _currentTime.difference(_afterTime).inSeconds;
+      //_detik = _remainingdetik;
+      _timeIntv = DateTime(int.parse(tahun), int.parse(bulan), int.parse(hari), int.parse(jam), int.parse(menit), 00);
+      _afterTime = _timeIntv + 16.minutes;
+      _remainingmenit = _currentTime.difference(_afterTime).inMinutes;
+      _menit = _remainingmenit;
     });
   }
 
+
+  _endKonsultasi () async  {
+    final response = await http.get(
+        "https://duakata-dev.com/miracle/api_script.php?do=act_selesaichatdokter&id="+widget.getApp);
+    Map data = jsonDecode(response.body);
+    Navigator.of(context).pushReplacement(
+        new MaterialPageRoute(
+            builder: (BuildContext context) => Home()));
+  }
 
   _connect() async {
     Checkconnection().check().then((internet){
@@ -77,6 +108,62 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     );
   }
 
+  int _detik2 = 60;
+  void startTimerDetik() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+          (Timer timer) => setState(
+            () {
+              if (_detik2 == 0) {
+                _detik2 = 60;
+              } else {
+                _detik2 = _detik2 - 1;
+              }
+        },
+      ),
+    );
+  }
+
+  void startTimerMenit() {
+    const oneMin = const Duration(minutes: 1);
+    _timer = new Timer.periodic(
+      oneMin,
+          (Timer timer) => setState(
+            () {
+          _menit = _menit + 1;
+          if (_menit == -5) {
+            Toast.show("Waktu konsultasi tinggal 5 menit", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+          } else if (_menit == -2) {
+            Toast.show("Waktu konsultasi tinggal 2 menit", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+          } else if (_menit == 0) {
+            _endKonsultasi();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _countdown() {
+    return Text(_menit.toString() + " : " +_detik2.toString(), style: TextStyle(color: Colors.white,fontSize: 27,
+      fontFamily: 'VarelaRound',),);
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _connect();
+    _session();
+    _handleCameraAndMic();
+    _getVideoDetail();
+    initialize();
+
+    startTimerDetik();
+    startTimerMenit();
+  }
+
+
   @override
   void dispose() {
     // clear users
@@ -88,38 +175,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     super.dispose();
   }
 
-  int waktunya;
-  int dd = DateTime.now().millisecondsSinceEpoch + 1000 * 60 * 60;
 
-  @override
-  void initState() {
-    super.initState();
-    _connect();
-    _session();
-    _handleCameraAndMic();
-    _getVideoDetail();
-    // initialize agora sdk
-    initialize();
-    //startTimer();
-    //the birthday's date
-    final birthday = DateTime(2020, 10, 26);
-    final date2 = DateTime.now();
-    final difference = date2.difference(birthday).inMilliseconds;
-
-   /* final startTime = DateTime(2020, 10, 26, 10, 30);
-    final currentTime = DateTime.now();
-
-    final diff_dy = currentTime.difference(startTime).inDays;
-    final diff_hr = currentTime.difference(startTime).inHours;
-    final diff_mn = currentTime.difference(startTime).inMinutes;
-    final diff_sc = currentTime.difference(startTime).inSeconds;
-
-    waktunya = diff_sc;*/
-
-    // showToast(dd.toString(), gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-
-    //showToast(difference.toString(), gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-  }
 
   Future<void> initialize() async {
     if (APP_ID.isEmpty) {
@@ -272,7 +328,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
   /// Toolbar layout
   Widget _toolbar() {
     final viewnya = _getRenderViews();
-   /* if (viewnya.length == 1) {
+    if (viewnya.length == 1) {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.symmetric(vertical: 48),
@@ -297,7 +353,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           ],
         ),
       );
-    } else {*/
+    } else {
       // if (widget.role == ClientRole.Audience || viewnya.length == 0)
       //return Container();
       return Container(
@@ -345,10 +401,9 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           ],
         ),
       );
-  /*  }*/
+    }
   }
 
-  int endTime2 = DateTime.now().millisecondsSinceEpoch + 1000 * 60 * 60;
 
   /// Info panel to show logs
   Widget _panel() {
@@ -361,18 +416,24 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           padding: const EdgeInsets.only(top: 30,right: 10),
           alignment: Alignment.topRight,
           child:
-          WeekCountdown()
+          Column(
+            children: [
+              _countdown(),
+              Text("Waktu konsultasi tersisa", style: new TextStyle(color: Colors.white,fontSize: 13,
+                fontFamily: 'VarelaRound',),)
+            ],
+          )
       ),
     )
 
       );
   }
 
-  void _onCallEnd(BuildContext context) {
+  /*void _onCallEnd(BuildContext context) {
     //Navigator.pop(context);
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (BuildContext context) => Home()));
-  }
+  }*/
 
   void _onToggleMute() {
     setState(() {
@@ -385,24 +446,6 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     AgoraRtcEngine.switchCamera();
   }
 
-  Timer _timer;
-  int _start = 900;
-
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_start < 1) {
-            timer.cancel();
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
 
   void showAlert() {
     showDialog(
@@ -440,7 +483,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
             actions: [
               new FlatButton(
                   onPressed: () {
-
+                    _endKonsultasi();
                   },
                   child:
                   Text("Iya", style: TextStyle(fontFamily: 'VarelaRound')))
@@ -482,10 +525,12 @@ class _VideoChatHomeState extends State<VideoChatHome> {
           ),
         ));
   }
+
+
 }
 
 
-
+/*
 class WeekCountdown extends StatefulWidget {
   String ID;
   @override
@@ -539,4 +584,4 @@ class _WeekCountdownState extends State<WeekCountdown> {
 DateTime calculateStartOfNextWeek(DateTime time) {
   final daysUntilNextWeek = 8 - time.weekday;
   return DateTime(2020, 10, 12 , 18 , 00);
-}
+}*/
