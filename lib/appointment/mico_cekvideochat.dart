@@ -72,7 +72,7 @@ class _CekVideoChatState extends State<CekVideoChat> {
             if (int.parse(formattedMenit) == int.parse(menit) || int.parse(formattedMenit) > int.parse(menit)) {
               setState(() {
                 Navigator.of(context)
-                    .pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => VideoChatHome(widget.appKode, "1")));
+                    .pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => VideoChatHome(widget.appKode)));
               });
             } else {
               setMessage = 2;

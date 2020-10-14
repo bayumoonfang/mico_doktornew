@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mico_doktornew/mico_home.dart';
+import 'package:mico_doktornew/mico_splashscreen.dart';
 
 void main() {
   runApp(MyApp());

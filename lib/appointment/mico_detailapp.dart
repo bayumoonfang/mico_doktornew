@@ -86,7 +86,7 @@ class _DetailAppointmentState extends State<DetailAppointment> {
         } else {
           Navigator.of(context).pushReplacement(
               new MaterialPageRoute(
-                  builder: (BuildContext context) => VideoChatHome(widget.idAppointment, getRoom.toString())));
+                  builder: (BuildContext context) => VideoChatHome(widget.idAppointment)));
         }
       }
     });

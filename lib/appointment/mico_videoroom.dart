@@ -18,11 +18,11 @@ import 'package:time/time.dart';
 
 
 class VideoChatHome extends StatefulWidget {
-  final String getApp, getRoom;
+  final String getApp;
   final ClientRole role = ClientRole.Broadcaster;
 
 
-  const VideoChatHome(this.getApp, this.getRoom);
+  const VideoChatHome(this.getApp);
 
   @override
   _VideoChatHomeState createState() => _VideoChatHomeState();
@@ -51,7 +51,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     Toast.show(msg, context, duration: duration, gravity: gravity);
   }
 
-  String tahun, bulan, hari, jam, menit = "0";
+  String tahun, bulan, hari, jam, menit, getRoom = "0";
   void _getVideoDetail() async {
     final response = await http.get(
         "https://duakata-dev.com/miracle/api_script.php?do=getdata_videodetailuser&id="+widget.getApp);
@@ -62,6 +62,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
       hari = data["c"].toString();
       jam = data["d"].toString();
       menit = data["e"].toString();
+      getRoom = data["f"].toString();
       _currentTime = DateTime.now();
       //_timeIntv = DateTime(2020, 10, 13, 12, 20, 00);
       //_remainingdetik = _currentTime.difference(_afterTime).inSeconds;
@@ -81,6 +82,10 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     Navigator.of(context).pushReplacement(
         new MaterialPageRoute(
             builder: (BuildContext context) => Home()));
+    _users.clear();
+    // destroy sdk
+    AgoraRtcEngine.leaveChannel();
+    AgoraRtcEngine.destroy();
   }
 
   _connect() async {
@@ -194,7 +199,7 @@ class _VideoChatHomeState extends State<VideoChatHome> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = Size(1920, 1080);
     await AgoraRtcEngine.setVideoEncoderConfiguration(configuration);
-    await AgoraRtcEngine.joinChannel(null, widget.getRoom, null, 0);
+    await AgoraRtcEngine.joinChannel(null, getRoom, null, 0);
   }
 
   /// Create agora sdk instance and initialize
