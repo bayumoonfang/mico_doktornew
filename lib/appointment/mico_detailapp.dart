@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:mico_doktornew/appointment/mico_cekroom.dart';
 import 'package:mico_doktornew/appointment/mico_chatroom.dart';
 import 'package:mico_doktornew/appointment/mico_videoroom.dart';
 import 'package:mico_doktornew/mico_home.dart';
@@ -79,15 +80,9 @@ class _DetailAppointmentState extends State<DetailAppointment> {
           return;
         });
       }else if (getMessage == '3') {
-        if (getJenis == 'RC') {
-          Navigator.of(context).pushReplacement(
-              new MaterialPageRoute(
-                  builder: (BuildContext context) => Chatroom(widget.idAppointment, "1")));
-        } else {
-          Navigator.of(context).pushReplacement(
-              new MaterialPageRoute(
-                  builder: (BuildContext context) => VideoChatHome(widget.idAppointment)));
-        }
+        Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(
+                builder: (BuildContext context) => CekRoomKonsultasi(widget.idAppointment, "2")));
       }
     });
   }

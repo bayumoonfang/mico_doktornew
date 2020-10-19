@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:mico_doktornew/appointment/mico_chatroom.dart';
 import 'package:mico_doktornew/appointment/mico_videoroom.dart';
 import 'package:mico_doktornew/helper/session_login.dart';
 import 'package:mico_doktornew/mico_login.dart';
@@ -17,16 +18,16 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 
-class CekVideoChat extends StatefulWidget {
-  final String appKode;
-  const CekVideoChat(this.appKode);
+class CekRoomKonsultasi extends StatefulWidget {
+  final String appKode, appID;
+  const CekRoomKonsultasi(this.appKode, this.appID);
   @override
-  _CekVideoChatState createState() =>
-      _CekVideoChatState();
+  _CekRoomKonsultasiState createState() =>
+      _CekRoomKonsultasiState();
 //_DokterSearchPageState createState() => _DokterSearchPageState();
 }
 
-class _CekVideoChatState extends State<CekVideoChat> {
+class _CekRoomKonsultasiState extends State<CekRoomKonsultasi> {
 
   String getAcc = "";
   String getMessage = "";
@@ -49,11 +50,11 @@ class _CekVideoChatState extends State<CekVideoChat> {
     }
   }
 
-  String tahun, bulan, hari, jam, menit = "0";
-  String fulldate, fulljam = "...";
-   _getVideoDetail() async {
+  String tahun, bulan, hari, jam, menit, room, typekonsul = "0";
+  String fulldate, fulljam, roomstatus, checkroom = "...";
+  _getVideoDetail() async {
     final response = await http.get(
-        "https://duakata-dev.com/miracle/api_script.php?do=getdata_videodetailuser&id="+widget.appKode);
+        "https://duakata-dev.com/miracle/api_script.php?do=getdata_appdetail&id="+widget.appKode);
     Map data = jsonDecode(response.body);
     setState(() {
       tahun = data["a"].toString();
@@ -61,33 +62,80 @@ class _CekVideoChatState extends State<CekVideoChat> {
       hari = data["c"].toString();
       jam = data["d"].toString();
       menit = data["e"].toString();
+      room = data["f"].toString();
+      typekonsul = data["g"].toString();
+      roomstatus = data["h"].toString();
+      checkroom = data["i"].toString();
       fulldate = tahun+"-"+bulan+"-"+hari;
       fulljam = jam+":"+menit;
     });
   }
 
-   _cekroom() async {
-      if (formattedDate == fulldate) {
-          if (int.parse(formattedJam) == int.parse(jam) || int.parse(formattedJam) > int.parse(jam)) {
-            if (int.parse(formattedMenit) == int.parse(menit) || int.parse(formattedMenit) > int.parse(menit)) {
-              setState(() {
-                Navigator.of(context)
-                    .pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => VideoChatHome(widget.appKode)));
-              });
-            } else {
-              setMessage = 2;
-            }
-          } else{
-            setState(() {
-              setMessage = 2;
-            });
-          }
-      } else {
-        setState(() {
-          setMessage = 2;
-        });
-      }
+  /*message information
+    0 = Loading Awal
+    1 = Status Room CLosed
+    2 = Room belum jatuh tanggal dan jam
+    3 = Lulus sensor
+   */
+  _cekroom_ready() async {
+    if (roomstatus == 'CLOSED') {
+      setState(() {
+        setMessage = 1;
+      });
+    }
+  }
 
+  _cekroom_tanggal() async {
+    if (formattedDate != fulldate) {
+      setState(() {
+        setMessage = 2;
+      });
+    }
+  }
+
+  _cekroom_jam() async {
+    if (int.parse(formattedJam) < int.parse(jam) ) {
+      setState(() {
+        setMessage = 2;
+      });
+    }
+  }
+
+  _cekroom_menit() async {
+    if (int.parse(formattedMenit) < int.parse(formattedMenit) ) {
+      setState(() {
+        setMessage = 2;
+      });
+    }
+  }
+
+  _cekroom_checkin() async {
+    if(checkroom == '0') {
+      await _cekroom_tanggal();
+      await _cekroom_jam();
+      await _cekroom_menit();
+    } else {
+      setState(() {
+        if(typekonsul == 'CHAT') {
+          Navigator.of(context)
+              .pushReplacement(new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  Chatroom(widget.appKode, widget.appID)));
+        } else {
+          Navigator.of(context)
+              .pushReplacement(new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  VideoChatHome(widget.appKode)));
+        }
+      });
+    }
+  }
+
+
+
+  _cekroom() async {
+    await _cekroom_ready();
+    await _cekroom_checkin();
   }
 
 
@@ -143,7 +191,7 @@ class _CekVideoChatState extends State<CekVideoChat> {
                   ],
                 )
 
-                    : setMessage == 2 ?
+                    : setMessage == 1 ?
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -158,32 +206,8 @@ class _CekVideoChatState extends State<CekVideoChat> {
                           padding: const EdgeInsets.only(left: 25,right: 25,top: 5),
                           child :
                           Text(
-                            "Jadwal appointment anda belum dimulai.",
+                            "Appointment anda sudah selesai.",
                             style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16),textAlign: TextAlign.center,
-                          )
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:2),
-                      child:
-                      Padding (
-                          padding: const EdgeInsets.only(left: 25,right: 25,top: 5),
-                          child :
-                          Text(
-                            "Appointment anda dimulai pada : ",
-                            style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16),textAlign: TextAlign.center,
-                          )
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:2),
-                      child:
-                      Padding (
-                          padding: const EdgeInsets.only(left: 25,right: 25,top: 5),
-                          child :
-                          Text(
-                           fulldate+ " | "+fulljam,
-                            style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.center,
                           )
                       ),
                     ),
@@ -210,6 +234,72 @@ class _CekVideoChatState extends State<CekVideoChat> {
                     )
                   ],
                 )
+
+
+                    : setMessage == 2 ?
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      Padding (
+                          padding: const EdgeInsets.only(left: 25,right: 25),
+                          child :
+                          Text(
+                            "Appointment anda dimulai pada : ",
+                            style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16),textAlign: TextAlign.center,
+                          )
+                      ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top:2),
+                      child:
+                      Padding (
+                          padding: const EdgeInsets.only(left: 25,right: 25,top: 5),
+                          child :
+                          Text(
+                            'Tanggal : '+fulldate,
+                            style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.center,
+                          )
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:2),
+                      child:
+                      Padding (
+                          padding: const EdgeInsets.only(left: 25,right: 25,top: 5),
+                          child :
+                          Text(
+                            'Jam : '+fulljam,
+                            style: TextStyle(fontFamily: 'VarelaRound', fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.center,
+                          )
+                      ),
+                    ),
+
+
+
+                    Padding(
+                      padding: const EdgeInsets.only(top:10),
+                      child:   RaisedButton(
+                        color:  HexColor("#075e55"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          //side: BorderSide(color: Colors.red, width: 2.0)
+                        ),
+                        child: Text(
+                          "Kembali",
+                          style: TextStyle(
+                              fontFamily: 'VarelaRound',
+                              fontSize: 14,
+                              color: Colors.white
+                          ),
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                    )
+                  ],
+                )
+
 
                     :
                 Text("")

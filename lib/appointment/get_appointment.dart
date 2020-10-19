@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:mico_doktornew/appointment/mico_cekvideochat.dart';
+import 'package:mico_doktornew/appointment/mico_cekroom.dart';
 import 'package:mico_doktornew/appointment/mico_detailapp.dart';
 import 'package:mico_doktornew/appointment/mico_chatroom.dart';
 import 'package:mico_doktornew/appointment/mico_videoroom.dart';
@@ -187,18 +187,8 @@ class _GetAppointmentState extends State<GetAppointment> {
                                   data[i]["c"] == 'ON REVIEW'  ?
                                   Navigator.of(context).push(new MaterialPageRoute(
                                       builder: (BuildContext context) => DetailAppointment(data[i]["b"].toString())))
-                                  : data[i]["c"] == 'PAID' && data[i]["m"] == 'CHAT' ?
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                  builder: (BuildContext context) => Chatroom(data[i]["b"].toString(), "2")))
-                                  :
-                                  data[i]["c"] == 'PAID' && data[i]["m"] == 'VIDEO' ?
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => CekVideoChat(data[i]["b"].toString())))
-                                  /*    Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => VideoChatHome(data[i]["b"].toString(), data[i]["n"].toString())))*/
-                                      :
-                                  Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => Home()));
+                                  :   Navigator.of(context).push(new MaterialPageRoute(
+                                      builder: (BuildContext context) => CekRoomKonsultasi(data[i]["b"].toString(), "1")));
                                 },
                               );
                           }
